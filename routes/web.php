@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ReservationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SpaceController;
 
@@ -17,5 +18,5 @@ use App\Http\Controllers\SpaceController;
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::resource('reservations',ReservationController::class);
 Route::resource('space', SpaceController::class);

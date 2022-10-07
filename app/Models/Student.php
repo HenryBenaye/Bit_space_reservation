@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Space extends Model
+class Student extends Model
 {
     use HasFactory;
     protected $fillable = [
         'name',
-        'max_students',
+        'email',
+        'password',
     ];
     public function reservations()
     {
