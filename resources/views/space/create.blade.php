@@ -6,7 +6,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="flex justify-center flex-col items-center">
-<form class="drop-shadow-lg flex flex-col space-y-4" action="{{route('space.store')}}">
+<form class="drop-shadow-lg flex flex-col space-y-4" action="{{route('space.store')}}" method="post">
     @csrf
     @method('post')
     <label for="Space">
