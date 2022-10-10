@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Space;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,8 +21,8 @@ class ReservationFactory extends Factory
     {
         $date_begin = $this->faker->dateTime();
         return [
-            'student_id' => Student::factory()->create(),
-            'space_id' => Space::factory(),
+            'user_id' => User::factory(),
+            'space_id' => $this->faker->numberBetween(1,5),
             'begin_time' => $this->faker->dateTime(),
             'end_time' => $this->faker->dateTimeBetween($date_begin,'+1 hours')
         ];

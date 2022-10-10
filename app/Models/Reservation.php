@@ -5,18 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Reservation extends Model
+class   Reservation extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'student_id',
+        'user_id',
         'space_id' ,
         'begin_time' ,
         'end_time',
     ];
-    public function student()
+    public function user()
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(User::class);
     }
     public function space()
     {

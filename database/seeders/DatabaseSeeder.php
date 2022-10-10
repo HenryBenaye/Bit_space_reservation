@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use App\Models\Reservation;
 use App\Models\Space;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -17,7 +18,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Reservation::factory(5)->create();
+        Space::factory(5)->create();
+        User::factory(3)->has(Reservation::factory(5))->create();
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([

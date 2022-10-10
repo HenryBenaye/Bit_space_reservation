@@ -11,7 +11,7 @@
     @foreach($reservations as $reservation)
         <div class="flex flex-col items-center shadow-lg space-x-4">
             <p class="font-bold">{{$reservation->space->name}}</p>
-            <p>{{$reservation->student->name}} , Time: {{$reservation->begin_time}} - {{$reservation->end_time}}</p>
+            <p>{{$reservation->user->name}} , Time: {{$reservation->begin_time}} - {{$reservation->end_time}}</p>
         </div>
     @endforeach
 </div>

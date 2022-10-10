@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\ReservationController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SpaceController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +20,9 @@ Route::get('/', function () {
 });
 Route::resource('reservations',ReservationController::class);
 Route::resource('space', SpaceController::class);
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+require __DIR__.'/auth.php';
