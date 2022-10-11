@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Space;
 use App\Models\Student;
 use App\Models\User;
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,12 +20,20 @@ class ReservationFactory extends Factory
      */
     public function definition()
     {
-        $date_begin = $this->faker->dateTime();
+        $begin_time = $this->faker->dateTimeBetween('08:30:00', '17:00:00')->format('H:i:s');
+        $datetime = new DateTime($begin_time);
+        $end_time = $datetime->add(new \DateInterval('PT1H'))->format('H:i:s');
+        if (strtotime($end_time) > strtotime('17:00:00'))
+        {
+            $end_time = strtotime('17:00:00');
+            $end_time = date('H:i:s', $end_time);
+        }
+
         return [
             'user_id' => User::factory(),
             'space_id' => $this->faker->numberBetween(1,5),
-            'begin_time' => $this->faker->dateTime(),
-            'end_time' => $this->faker->dateTimeBetween($date_begin,'+1 hours')
+            'begin_time' => $begin_time ,
+            'end_time' =>$end_time
         ];
     }
 }

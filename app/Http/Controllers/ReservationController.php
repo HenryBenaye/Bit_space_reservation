@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
@@ -47,7 +48,8 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        //
+        $reservations = Reservation::where('user_id', '=', Auth::user()->id)->get();
+        return view('dashboard', ['reservations' => $reservations]);
     }
 
     /**

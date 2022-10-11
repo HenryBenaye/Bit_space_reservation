@@ -20,9 +20,6 @@ Route::get('/', function () {
 });
 Route::resource('reservations',ReservationController::class);
 Route::resource('space', SpaceController::class);
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [ReservationController::class, 'show'] )->middleware(['auth', 'verified'])->name('dashboard');
 
 require __DIR__.'/auth.php';
