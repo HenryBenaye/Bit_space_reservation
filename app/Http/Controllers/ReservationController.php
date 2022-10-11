@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reservation;
+use App\Models\Space;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,7 +27,8 @@ class ReservationController extends Controller
      */
     public function create()
     {
-        //
+        $spaces = Space::all();
+        return view('reservation.create', ['spaces' => $spaces]);
     }
 
     /**
@@ -37,7 +39,13 @@ class ReservationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $reservation = new Reservation();
+        $reservation->user_id= Auth::user()->id;
+        $reservation->space_id = Space::where('name', $request['space_name'])->first()->id;
+        $reservation->begin_time = date('H:i:s',strtotime($request['begin_time']));
+        $reservation->end_time = date('H:i:s',strtotime($request['end_time']));
+        $reservation->save();
+        return redirect()->route('dashboard');
     }
 
     /**
@@ -60,7 +68,10 @@ class ReservationController extends Controller
      */
     public function edit(Reservation $reservation)
     {
-        //
+        $reservation = Reservation::find($reservation->id);
+        $spaces = Space::all();
+
+        return view('reservation.edit', ['reservation' => $reservation, 'spaces' => $spaces]);
     }
 
     /**
@@ -72,7 +83,13 @@ class ReservationController extends Controller
      */
     public function update(Request $request, Reservation $reservation)
     {
-        //
+        $reservation = Reservation::find($reservation->id);
+        $reservation->space_id = Space::where('name', $request['space_name'])->first()->id;
+        $reservation->user_id= Auth::user()->id;
+        $reservation->begin_time = date('H:i:s',strtotime($request['begin_time']));
+        $reservation->end_time = date('H:i:s',strtotime($request['end_time']));
+        $reservation->update();
+        return redirect()->route('dashboard');
     }
 
     /**
@@ -83,6 +100,7 @@ class ReservationController extends Controller
      */
     public function destroy(Reservation $reservation)
     {
-        //
+        Reservation::destroy($reservation->id);
+        return redirect()->route('dashboard');
     }
 }
