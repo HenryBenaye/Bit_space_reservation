@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('spaces', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->integer('reserved_students');
             $table->integer('max_students');
             $table->timestamps();
         });

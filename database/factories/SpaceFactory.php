@@ -17,7 +17,8 @@ class SpaceFactory extends Factory
     public function definition()
     {
         return [
-            'name' =>$this->faker->monthName,
+            'name' => $this->faker->monthName,
+            'reserved_students' => $this->faker->numberBetween(0,11),
             'max_students' => 11,
         ];
     }

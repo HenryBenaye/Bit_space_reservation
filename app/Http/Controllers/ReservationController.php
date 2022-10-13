@@ -36,24 +36,28 @@ class ReservationController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
         // Controleren
         $user = User::find(Auth::user()->id);
+        $space = Space::where('name', $request['space_name'])->first();
 
-        if($user->reservations === 5)
-        {
+        if($user->reservations === 5) {
             return redirect()->back()->withErrors(['msg' => 'Je hebt al 5 reserveringen']);
+        } elseif($space->max_students - $space->reserved_students <= 0)
+        {
+            return redirect()->back()->withErrors(['msg' => 'Ruimte is vol']);
         } else
         {
             $user->reservations++;
+            $space->reserved_students++;
             $user->save();
 
             $reservation = new Reservation();
             $reservation->user_id= Auth::user()->id;
-            $reservation->space_id = Space::where('name', $request['space_name'])->first()->id;
+            $reservation->space_id = $space->id;
             $reservation->begin_time = date('H:i:s',strtotime($request['begin_time']));
             $reservation->end_time = date('H:i:s',strtotime($request['end_time']));
             $reservation->save();

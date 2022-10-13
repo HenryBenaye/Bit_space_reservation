@@ -10,6 +10,7 @@ class Space extends Model
     use HasFactory;
     protected $fillable = [
         'name',
+        'reserved_students',
         'max_students',
     ];
     public function reservations()
