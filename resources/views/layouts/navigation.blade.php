@@ -13,9 +13,16 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                        {{ __(Auth::user()->type === 1 ? "Reserveringen" : "Dashboard") }}
                     </x-nav-link>
                 </div>
+                @if(Auth::user()->type == 2)
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link :href="route('space.index')" :active="request()->routeIs('space.index')">
+                            {{ __('Spaces') }}
+                        </x-nav-link>
+                    </div>
+                @endif
             </div>
 
             <!-- Settings Dropdown -->
@@ -34,9 +41,16 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('reservations.create')">
-                            {{ __('Nieuwe Reservering') }}
-                        </x-dropdown-link>
+                        @if(Auth::user()->type == 2)
+                            <x-dropdown-link :href="route('reservations.create')">
+                                {{ __('Spaces') }}
+                            </x-dropdown-link>
+                        @endif
+                        @if(Auth::user()->type == 1)
+                                <x-dropdown-link :href="route('reservations.create')">
+                                    {{ __('Nieuwe Reservering') }}
+                                </x-dropdown-link>
+                        @endif
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

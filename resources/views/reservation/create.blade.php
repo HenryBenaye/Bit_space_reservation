@@ -1,3 +1,4 @@
+
 <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">
@@ -6,7 +7,6 @@
 
         <form method="POST" action="{{ route('reservations.store') }}">
             @csrf
-
             <!-- Space -->
             <div>
                 <x-input-label for="space_name" :value="__('Space')" />
@@ -33,6 +33,9 @@
             </div>
 
             <div class="flex items-center justify-end mt-4">
+                @if($errors->any())
+                    {{ implode('', $errors->all(':message')) }}
+                @endif
                 <x-primary-button class="ml-4">
                     {{ __('Klaar') }}
                 </x-primary-button>
