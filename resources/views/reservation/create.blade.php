@@ -21,7 +21,7 @@
             <div class="mt-4">
                 <x-input-label for="begin_time" :value="__('Begin tijd')"  />
 
-                <x-text-input id="begin_time" class="block mt-1 w-full" type="time" name="begin_time" min="08:30" max="17:00" required />
+                <x-text-input id="begin_time" step="900" class="block mt-1 w-full" type="time" name="begin_time" min="08:30" max="17:00" required />
 
             </div>
 
@@ -40,6 +40,26 @@
                     {{ __('Klaar') }}
                 </x-primary-button>
             </div>
+            <select name="begin_time_hour" id="begin_time_hour">
+                @for($x = 8; $x <= 17; $x++)
+                    <option value="{{$x}}">{{$x}}</option>
+                @endfor
+            </select>
+            <select name="begin_time_minute" id="begin_time_minute">
+                @for($x = 00; $x <= 45; $x+=15)
+                    <option value="{{$x}}">{{$x}}</option>
+                @endfor
+            </select>
+            <select name="begin_time_hour" id="begin_time_hour">
+                @for($x = 8; $x <= 17; $x++)
+                    <option value="{{$x}}">{{$x}}</option>
+                @endfor
+            </select>
+            <select name="begin_time_minute" id="begin_time_minute">
+                @for($x = 00; $x <= 45; $x+=15)
+                    <option value="{{$x}}">{{$x}}</option>
+                @endfor
+            </select>
         </form>
     </x-auth-card>
 </x-guest-layout>

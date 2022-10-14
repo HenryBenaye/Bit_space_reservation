@@ -12,10 +12,18 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <!-- Import style -->
+        <link rel="stylesheet" href="//unpkg.com/element-plus/dist/index.css" />
+        <!-- Import Vue 3 -->
+        <script src="//unpkg.com/vue@3"></script>
+        <!-- Import component library -->
+        <script src="//unpkg.com/element-plus"></script>
     </head>
     <body>
         <div class="font-sans text-gray-900 antialiased">
             {{ $slot }}
         </div>
+
+
     </body>
 </html>

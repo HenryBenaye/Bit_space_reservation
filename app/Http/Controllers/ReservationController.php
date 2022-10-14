@@ -48,11 +48,17 @@ class ReservationController extends Controller
         $begin_time = strtotime($request['begin_time']);
         $end_time = strtotime($request['end_time']);
         $time_diff = round(abs($begin_time- $end_time )/ 60,2);
-
+        $time_check = Reservation::where('user_id',  $user->id)
+            ->where('begin_time' , '>', $request['begin_time'])
+            ->where('end_time', '<', $request['end_time'])->get();
         // Controles uitvoeren of de gebruiker juiste data heeft ingevoerd
         if ($time_diff < 15 || $time_diff > 60)
         {
             return redirect()->back()->withErrors(['msg' => 'Je moet minimaal 15 minuten reserveren of je hebt meer dan een uur gereserveerd']);
+        }
+        if ($time_check)
+        {
+            return redirect()->back()->withErrors(['msg' => 'Je hebt al een reservering tussen die tijd']);
         }
         if($user->reservations === 5) {
             return redirect()->back()->withErrors(['msg' => 'Je hebt al 5 reserveringen']);
@@ -74,8 +80,6 @@ class ReservationController extends Controller
         $reservation->save();
         $this->route = redirect()->route('dashboard');
         return $this->route;
-
-
     }
 
     /**
