@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
+    private $route;
+
     /**
      * Display a listing of the resource.
      *
@@ -40,29 +42,38 @@ class ReservationController extends Controller
      */
     public function store(Request $request)
     {
-        // Controleren
+
         $user = User::find(Auth::user()->id);
         $space = Space::where('name', $request['space_name'])->first();
+        $begin_time = strtotime($request['begin_time']);
+        $end_time = strtotime($request['end_time']);
+        $time_diff = round(abs($begin_time- $end_time )/ 60,2);
 
+        // Controles uitvoeren of de gebruiker juiste data heeft ingevoerd
+        if ($time_diff < 15 || $time_diff > 60)
+        {
+            return redirect()->back()->withErrors(['msg' => 'Je moet minimaal 15 minuten reserveren of je hebt meer dan een uur gereserveerd']);
+        }
         if($user->reservations === 5) {
             return redirect()->back()->withErrors(['msg' => 'Je hebt al 5 reserveringen']);
-        } elseif($space->max_students - $space->reserved_students <= 0)
+        }
+        if($space->max_students - $space->reserved_students <= 0)
         {
             return redirect()->back()->withErrors(['msg' => 'Ruimte is vol']);
-        } else
-        {
-            $user->reservations++;
-            $space->reserved_students++;
-            $user->save();
-
-            $reservation = new Reservation();
-            $reservation->user_id= Auth::user()->id;
-            $reservation->space_id = $space->id;
-            $reservation->begin_time = date('H:i:s',strtotime($request['begin_time']));
-            $reservation->end_time = date('H:i:s',strtotime($request['end_time']));
-            $reservation->save();
-            return redirect()->route('dashboard');
         }
+
+        $user->reservations++;
+        $space->reserved_students++;
+        $user->save();
+
+        $reservation = new Reservation();
+        $reservation->user_id= Auth::user()->id;
+        $reservation->space_id = $space->id;
+        $reservation->begin_time = date('H:i:s',$begin_time);
+        $reservation->end_time = date('H:i:s',$end_time);
+        $reservation->save();
+        $this->route = redirect()->route('dashboard');
+        return $this->route;
 
 
     }
@@ -89,7 +100,6 @@ class ReservationController extends Controller
     {
         $reservation = Reservation::find($reservation->id);
         $spaces = Space::all();
-
         return view('reservation.edit', ['reservation' => $reservation, 'spaces' => $spaces]);
     }
 
