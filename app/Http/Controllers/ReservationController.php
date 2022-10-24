@@ -47,29 +47,10 @@ class ReservationController extends Controller
         $space = Space::where('name', $request['space_name'])->first();
         $begin_time = strtotime($request['begin_time_hour'] .':'.$request['begin_time_minute']);
         $end_time = strtotime($request['end_time_hour'] .':'.$request['end_time_minute']);
-        $time_diff = round(abs($begin_time- $end_time )/ 60,2);
-        $time_check = Reservation::where('user_id',  $user->id)
-            ->where('begin_time' , '>', $begin_time)
-            ->where('end_time', '<', $end_time)->get();
-        // Controles uitvoeren of de gebruiker juiste data heeft ingevoerd
-        if ($time_diff < 15 || $time_diff > 60)
-        {
-            return redirect()->back()->withErrors(['msg' => 'Je moet minimaal 15 minuten reserveren of je hebt meer dan een uur gereserveerd']);
-        }
-        if ($time_check == false)
-        {
-            return redirect()->back()->withErrors(['msg' => 'Je hebt al een reservering tussen die tijd']);
-        }
-        if($user->reservations === 5) {
-            return redirect()->back()->withErrors(['msg' => 'Je hebt al 5 reserveringen']);
-        }
-        if($space->max_students - $space->reserved_students <= 0)
-        {
-            return redirect()->back()->withErrors(['msg' => 'Ruimte is vol']);
-        }
-
+        $this->data_check($user,$space,$begin_time,$end_time);
         $user->reservations++;
         $space->reserved_students++;
+        $space->save();
         $user->save();
 
         $reservation = new Reservation();
@@ -121,6 +102,7 @@ class ReservationController extends Controller
         $reservation->user_id= Auth::user()->id;
         $reservation->begin_time =  date('H:i', strtotime($request['begin_time_hour'] .':'.$request['begin_time_minute']));
         $reservation->end_time =  date('H:i', strtotime($request['end_time_hour'] .':'.$request['end_time_minute']));
+        $this->data_check(User::find(Auth::user()->id), Space::where('name', $request['space_name'])->first(),$reservation->begin_time,$reservation->end_time);
         $reservation->update();
         return redirect()->route('dashboard');
     }
@@ -134,9 +116,37 @@ class ReservationController extends Controller
     public function destroy(Reservation $reservation)
     {
         $user = User::find(Auth::user()->id);
+        $space = Space::find($reservation->space_id);
         $user->reservations--;
+        $space->reserved_students--;
+        $space->save();
         $user->save();
         Reservation::destroy($reservation->id);
         return redirect()->route('dashboard');
+    }
+
+    private function data_check($user,$space, $begin_time, $end_time )
+    {
+        $time_diff = round(abs(strtotime($begin_time)- strtotime($end_time) )/ 60,2);
+        $time_check = Reservation::where('user_id',  $user->id)
+            ->where('begin_time' , '>', $begin_time)
+            ->where('end_time', '<', $end_time)->get();
+        // Controles uitvoeren of de gebruiker juiste data heeft ingevoerd
+        if ($time_diff < 15 || $time_diff > 60)
+        {
+            return redirect()->back()->withErrors(['msg' => 'Je moet minimaal 15 minuten reserveren of je hebt meer dan een uur gereserveerd']);
+        }
+        if ($time_check == false)
+        {
+            return redirect()->back()->withErrors(['msg' => 'Je hebt al een reservering tussen die tijd']);
+        }
+        if($user->reservations === 5) {
+            return redirect()->back()->withErrors(['msg' => 'Je hebt al 5 reserveringen']);
+        }
+        if($space->max_students - $space->reserved_students <= 0)
+        {
+            return redirect()->back()->withErrors(['msg' => 'Ruimte is vol']);
+        }
+
     }
 }

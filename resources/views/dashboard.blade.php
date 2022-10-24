@@ -13,7 +13,7 @@
                         <p class="font-bold">Space</p>
                         <p>{{$reservation->space->name}}</p>
                         <p class="font-bold">Time</p>
-                        <p>{{$reservation->begin_time}}-{{$reservation->end_time}}</p>
+                        <p>{{date("H:i", strtotime($reservation->begin_time))}}-{{date("H:i", strtotime($reservation->end_time))}}</p>
                         <div class="flex flex-row">
                             <a href="{{route('reservations.edit',$reservation->id)}}">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
