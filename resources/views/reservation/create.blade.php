@@ -18,18 +18,34 @@
             </div>
 
             <!-- Time -->
-            <div class="mt-4">
+            <div class="begin_time_box mt-4">
                 <x-input-label for="begin_time" :value="__('Begin tijd')"  />
 
-                <x-text-input id="begin_time" step="900" class="block mt-1 w-full" type="time" name="begin_time" min="08:30" max="17:00" required />
-
+                <select class="rounded-md mt-1 shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" name="begin_time_hour" id="begin_time_hour">
+                    @for($x = 8; $x <= 17; $x++)
+                        <option  value="{{$x}}">{{$x}}</option>
+                    @endfor
+                </select>
+                <select class="rounded-md mt-1 shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" name="begin_time_minute" id="begin_time_minute">
+                    @for($x = 00; $x <= 45; $x+=15)
+                        <option value="{{$x}}" {{ $x != 30 ?: "selected"}}>{{$x}}</option>
+                    @endfor
+                </select>
             </div>
 
-            <div class="mt-4">
+            <div class="end_time_box mt-4">
                 <x-input-label for="end_time" :value="__('Eind tijd')" />
 
-                <x-text-input id="end_time" class="block mt-1 w-full" type="time" name="end_time" min="08:30" max="17:00" required />
-
+                <select class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" name="end_time_hour" id="end_time_hour">
+                    @for($x = 8; $x <= 17; $x++)
+                        <option value="{{$x}}">{{$x}}</option>
+                    @endfor
+                </select>
+                <select class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" name="end_time_minute" id="end_time_minute">
+                    @for($x = 00; $x <= 45; $x+=15)
+                        <option value="{{$x}}" {{ $x != 45 ?: "selected"}}>{{$x}}</option>
+                    @endfor
+                </select>
             </div>
 
             <div class="flex items-center justify-end mt-4">
@@ -40,26 +56,8 @@
                     {{ __('Klaar') }}
                 </x-primary-button>
             </div>
-            <select name="begin_time_hour" id="begin_time_hour">
-                @for($x = 8; $x <= 17; $x++)
-                    <option value="{{$x}}">{{$x}}</option>
-                @endfor
-            </select>
-            <select name="begin_time_minute" id="begin_time_minute">
-                @for($x = 00; $x <= 45; $x+=15)
-                    <option value="{{$x}}">{{$x}}</option>
-                @endfor
-            </select>
-            <select name="begin_time_hour" id="begin_time_hour">
-                @for($x = 8; $x <= 17; $x++)
-                    <option value="{{$x}}">{{$x}}</option>
-                @endfor
-            </select>
-            <select name="begin_time_minute" id="begin_time_minute">
-                @for($x = 00; $x <= 45; $x+=15)
-                    <option value="{{$x}}">{{$x}}</option>
-                @endfor
-            </select>
+
+
         </form>
     </x-auth-card>
 </x-guest-layout>

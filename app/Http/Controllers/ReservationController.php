@@ -45,18 +45,18 @@ class ReservationController extends Controller
 
         $user = User::find(Auth::user()->id);
         $space = Space::where('name', $request['space_name'])->first();
-        $begin_time = strtotime($request['begin_time']);
-        $end_time = strtotime($request['end_time']);
+        $begin_time = strtotime($request['begin_time_hour'] .':'.$request['begin_time_minute']);
+        $end_time = strtotime($request['end_time_hour'] .':'.$request['end_time_minute']);
         $time_diff = round(abs($begin_time- $end_time )/ 60,2);
         $time_check = Reservation::where('user_id',  $user->id)
-            ->where('begin_time' , '>', $request['begin_time'])
-            ->where('end_time', '<', $request['end_time'])->get();
+            ->where('begin_time' , '>', $begin_time)
+            ->where('end_time', '<', $end_time)->get();
         // Controles uitvoeren of de gebruiker juiste data heeft ingevoerd
         if ($time_diff < 15 || $time_diff > 60)
         {
             return redirect()->back()->withErrors(['msg' => 'Je moet minimaal 15 minuten reserveren of je hebt meer dan een uur gereserveerd']);
         }
-        if ($time_check)
+        if ($time_check == false)
         {
             return redirect()->back()->withErrors(['msg' => 'Je hebt al een reservering tussen die tijd']);
         }
@@ -119,8 +119,8 @@ class ReservationController extends Controller
         $reservation = Reservation::find($reservation->id);
         $reservation->space_id = Space::where('name', $request['space_name'])->first()->id;
         $reservation->user_id= Auth::user()->id;
-        $reservation->begin_time = date('H:i:s',strtotime($request['begin_time']));
-        $reservation->end_time = date('H:i:s',strtotime($request['end_time']));
+        $reservation->begin_time =  date('H:i', strtotime($request['begin_time_hour'] .':'.$request['begin_time_minute']));
+        $reservation->end_time =  date('H:i', strtotime($request['end_time_hour'] .':'.$request['end_time_minute']));
         $reservation->update();
         return redirect()->route('dashboard');
     }
