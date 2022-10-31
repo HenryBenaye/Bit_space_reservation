@@ -6,7 +6,6 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-10 w-auto fill-current text-gray-600" />
                     </a>
                 </div>
 
@@ -16,7 +15,7 @@
                         {{ __(Auth::user()->type === 1 ? "Reserveringen" : "Dashboard") }}
                     </x-nav-link>
                 </div>
-                @if(Auth::user()->type == 2)
+                @if(Auth::user()->type == 0)
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('space.index')" :active="request()->routeIs('space.index')">
                             {{ __('Spaces') }}
@@ -59,7 +58,18 @@
                                                 this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
+
                         </form>
+                        <form method="GET" action="{{ route('space.create') }}">
+                            @csrf
+                            <x-dropdown-link :href="route('space.create')"
+                                    onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                {{ __('Nieuwe Space') }}
+                            </x-dropdown-link>
+
+                        </form>
+
                     </x-slot>
                 </x-dropdown>
             </div>

@@ -1,25 +1,35 @@
-<!doctype html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="flex justify-center flex-col items-center">
-<form class="drop-shadow-lg flex flex-col space-y-4" action="{{route('space.store')}}" method="post">
-    @csrf
-    @method('post')
-    <label for="Space">
-        Space
-        <input type="text" name="space_name" placeholder="Name of space ">
-    </label>
-    <label for="Max-student">
-        Max-students
-        <input type="number" name="max_students" placeholder="Number of max students">
-    </label>
-    <input class="border rounded-full" type="submit">
-</form>
+<x-guest-layout>
+    <x-auth-card>
+        <x-slot name="logo">
+            <p>Nieuwe space aanmaken</p>
 
+        </x-slot>
 
-</body>
-</html>
+        <!-- Session Status -->
+        <x-auth-session-status class="mb-4" :status="session('status')" />
+
+        <form method="POST" action="{{ route('space.store') }}">
+            @csrf
+            <!-- Email Address -->
+            <div>
+                <x-input-label for="space_name" :value="__('Space')" />
+
+                <x-text-input id="space_name" class="block mt-1 w-full" type="text" name="space_name" required autofocus />
+            </div>
+
+            <!-- Password -->
+            <div class="mt-4">
+                <x-input-label for="max_students" :value="__('Max students')" />
+
+                <x-text-input id="max_students" class="block mt-1 w-full"
+                              type="number"
+                              name="max_students"/>
+            </div>
+            <div class="flex items-center justify-end mt-4">
+                <x-primary-button class="ml-3">
+                    {{ __('Klaar') }}
+                </x-primary-button>
+            </div>
+        </form>
+    </x-auth-card>
+</x-guest-layout>

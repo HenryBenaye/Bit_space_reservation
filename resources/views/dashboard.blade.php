@@ -5,6 +5,11 @@
                 <div class="flex justify-center">
                     <h3 class="font-bold text-2xl">Lijst met reserveringen</h3>
                 </div>
+            @else
+                <div class="flex justify-center">
+                    <h3 class="font-bold text-2xl">Lijst met spaces</h3>
+
+                </div>
             @endif
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">

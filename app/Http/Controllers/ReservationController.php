@@ -48,19 +48,6 @@ class ReservationController extends Controller
         $begin_time = strtotime($request['begin_time_hour'] .':'.$request['begin_time_minute']);
         $end_time = strtotime($request['end_time_hour'] .':'.$request['end_time_minute']);
         $this->data_check($user,$space,$begin_time,$end_time);
-        $user->reservations++;
-        $space->reserved_students++;
-        $space->save();
-        $user->save();
-
-        $reservation = new Reservation();
-        $reservation->user_id= Auth::user()->id;
-        $reservation->space_id = $space->id;
-        $reservation->begin_time = date('H:i:s',$begin_time);
-        $reservation->end_time = date('H:i:s',$end_time);
-        $reservation->save();
-        $this->route = redirect()->route('dashboard');
-        return $this->route;
     }
 
     /**
@@ -127,7 +114,7 @@ class ReservationController extends Controller
 
     private function data_check($user,$space, $begin_time, $end_time )
     {
-        $time_diff = round(abs(strtotime($begin_time)- strtotime($end_time) )/ 60,2);
+        $time_diff = round(abs($begin_time-$end_time)/ 60,2);
         $time_check = Reservation::where('user_id',  $user->id)
             ->where('begin_time' , '>', $begin_time)
             ->where('end_time', '<', $end_time)->get();
@@ -147,6 +134,20 @@ class ReservationController extends Controller
         {
             return redirect()->back()->withErrors(['msg' => 'Ruimte is vol']);
         }
+
+        $user->reservations++;
+        $space->reserved_students++;
+        $space->save();
+        $user->save();
+
+        $reservation = new Reservation();
+        $reservation->user_id= Auth::user()->id;
+        $reservation->space_id = $space->id;
+        $reservation->begin_time = date('H:i:s',$begin_time);
+        $reservation->end_time = date('H:i:s',$end_time);
+        $reservation->save();
+        $this->route = redirect()->route('dashboard');
+        return $this->route;
 
     }
 }

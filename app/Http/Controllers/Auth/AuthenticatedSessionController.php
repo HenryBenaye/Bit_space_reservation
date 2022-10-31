@@ -31,8 +31,11 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-
-        return redirect()->intended(RouteServiceProvider::HOME);
+        if($request->email = 'admin@admin.admin')
+        {
+            return redirect()->intended(RouteServiceProvider::HOME_admin);
+        }
+        return redirect()->intended(RouteServiceProvider::HOME_student);
     }
 
     /**
