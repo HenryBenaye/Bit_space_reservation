@@ -99,9 +99,7 @@ class ReservationController extends Controller
         $reservation->user_id= Auth::user()->id;
         $reservation->begin_time = Carbon::create(0,0,0,$request['begin_time_hour'],$request['begin_time_minute']);
         $reservation->end_time =  Carbon::create(0,0,0,$request['end_time_hour'],$request['end_time_minute']);
-        $this->data_check(User::find(Auth::user()->id), Space::where('name', $request['space_name'])->first(),$reservation->begin_time,$reservation->end_time);
-        $reservation->update();
-        return redirect()->route('dashboard');
+        $this->data_check(User::find(Auth::user()->id), Space::where('name', $request['space_name'])->first(),$reservation->begin_time,$reservation->end_time,$reservation->update());
     }
 
     /**
@@ -122,7 +120,7 @@ class ReservationController extends Controller
         return redirect()->route('dashboard');
     }
 
-    private function data_check($user,$space, $begin_time, $end_time )
+    private function data_check($user,$space, $begin_time, $end_time, $type )
     {
         $time_check = Reservation::where('user_id',  $user->id)
             ->where('begin_time' , '>=', $begin_time->format('H:i'))
@@ -156,6 +154,7 @@ class ReservationController extends Controller
         $reservation->begin_time = $begin_time->format('H:i');
         $reservation->end_time = $end_time->format('H:i');
         $reservation->save();
+        $type;
         $this->route = redirect()->route('dashboard');
         return $this->route;
 
