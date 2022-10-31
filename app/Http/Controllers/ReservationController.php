@@ -45,16 +45,18 @@ class ReservationController extends Controller
     {
         $request->validate([
             'space_name' => 'required|exists:spaces,name',
-            'max_students' => 'required|integer|min:1',
+            'begin_time_hour' => 'required|integer',
+            'begin_time_minute' => 'required|integer',
+            'end_time_hour' => 'required|integer',
+            'end_time_minute' => 'required|integer',
         ]);
 
         $user = User::find(Auth::user()->id);
         $space = Space::where('name', $request['space_name'])->first();
 
-        $carbon_begin_time = Carbon::create(0,0,0,$request['begin_time_hour'],$request['begin_time_minute']);
-        $carbon_end_time = Carbon::create(0,0,0,$request['end_time_hour'],$request['end_time_minute']);
-        $begin_time = strtotime($request['begin_time_hour'] .':'.$request['begin_time_minute']);
-        $end_time = strtotime($request['end_time_hour'] .':'.$request['end_time_minute']);
+        $begin_time = Carbon::create(0,0,0,$request['begin_time_hour'],$request['begin_time_minute']);
+        $end_time = Carbon::create(0,0,0,$request['end_time_hour'],$request['end_time_minute']);
+
         return $this->data_check($user,$space,$begin_time,$end_time);
     }
 
@@ -122,17 +124,16 @@ class ReservationController extends Controller
 
     private function data_check($user,$space, $begin_time, $end_time )
     {
-
-        $time_diff = round(abs($begin_time-$end_time)/ 60,2);
         $time_check = Reservation::where('user_id',  $user->id)
-            ->where('begin_time' , '>', $begin_time)
-            ->where('end_time', '<', $end_time)->get();
+            ->where('begin_time' , '>=', $begin_time->format('H:i'))
+            ->where('end_time', '<=', $end_time->format('H:i'))->get();
+
         // Controles uitvoeren of de gebruiker juiste data heeft ingevoerd
-        if ($time_diff < 15 || $time_diff > 60)
+        if (!$end_time->isAfter($begin_time) || $begin_time->floatDiffInMinutes($end_time) > 60)
         {
             return redirect()->back()->withErrors(['msg' => 'Je moet minimaal 15 minuten reserveren of je hebt meer dan een uur gereserveerd']);
         }
-        if ($time_check == false)
+        if (!$time_check->isEmpty())
         {
             return redirect()->back()->withErrors(['msg' => 'Je hebt al een reservering tussen die tijd']);
         }
@@ -152,8 +153,8 @@ class ReservationController extends Controller
         $reservation = new Reservation();
         $reservation->user_id= Auth::user()->id;
         $reservation->space_id = $space->id;
-        $reservation->begin_time = date('H:i:s',$begin_time);
-        $reservation->end_time = date('H:i:s',$end_time);
+        $reservation->begin_time = $begin_time->format('H:i');
+        $reservation->end_time = $end_time->format('H:i');
         $reservation->save();
         $this->route = redirect()->route('dashboard');
         return $this->route;
