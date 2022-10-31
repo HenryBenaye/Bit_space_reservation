@@ -97,8 +97,8 @@ class ReservationController extends Controller
         $reservation = Reservation::find($reservation->id);
         $reservation->space_id = Space::where('name', $request['space_name'])->first()->id;
         $reservation->user_id= Auth::user()->id;
-        $reservation->begin_time =  date('H:i', strtotime($request['begin_time_hour'] .':'.$request['begin_time_minute']));
-        $reservation->end_time =  date('H:i', strtotime($request['end_time_hour'] .':'.$request['end_time_minute']));
+        $reservation->begin_time = Carbon::create(0,0,0,$request['begin_time_hour'],$request['begin_time_minute']);
+        $reservation->end_time =  Carbon::create(0,0,0,$request['end_time_hour'],$request['end_time_minute']);
         $this->data_check(User::find(Auth::user()->id), Space::where('name', $request['space_name'])->first(),$reservation->begin_time,$reservation->end_time);
         $reservation->update();
         return redirect()->route('dashboard');
