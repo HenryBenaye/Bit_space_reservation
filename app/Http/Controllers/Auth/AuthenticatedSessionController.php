@@ -31,11 +31,14 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-        if($request->email = 'admin@admin.admin')
+        if($request->email == 'admin@admin.admin')
         {
             return redirect()->intended(RouteServiceProvider::HOME_admin);
         }
-        return redirect()->intended(RouteServiceProvider::HOME_student);
+        else
+        {
+            return redirect()->intended(RouteServiceProvider::HOME_student);
+        }
     }
 
     /**
@@ -52,6 +55,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('login');
     }
 }
