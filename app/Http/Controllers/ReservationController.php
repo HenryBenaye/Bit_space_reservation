@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Reservation;
 use App\Models\Space;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -42,12 +43,19 @@ class ReservationController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'space_name' => 'required|exists:spaces,name',
+            'max_students' => 'required|integer|min:1',
+        ]);
 
         $user = User::find(Auth::user()->id);
         $space = Space::where('name', $request['space_name'])->first();
+
+        $carbon_begin_time = Carbon::create(0,0,0,$request['begin_time_hour'],$request['begin_time_minute']);
+        $carbon_end_time = Carbon::create(0,0,0,$request['end_time_hour'],$request['end_time_minute']);
         $begin_time = strtotime($request['begin_time_hour'] .':'.$request['begin_time_minute']);
         $end_time = strtotime($request['end_time_hour'] .':'.$request['end_time_minute']);
-        $this->data_check($user,$space,$begin_time,$end_time);
+        return $this->data_check($user,$space,$begin_time,$end_time);
     }
 
     /**
@@ -114,6 +122,7 @@ class ReservationController extends Controller
 
     private function data_check($user,$space, $begin_time, $end_time )
     {
+
         $time_diff = round(abs($begin_time-$end_time)/ 60,2);
         $time_check = Reservation::where('user_id',  $user->id)
             ->where('begin_time' , '>', $begin_time)
