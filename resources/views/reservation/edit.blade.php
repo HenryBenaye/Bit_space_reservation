@@ -47,8 +47,13 @@
                     @endfor
                 </select>
             </div>
+            <x-text-input id="id" class="block mt-1 w-full" type="hidden" name="reservation_id" value="{{$reservation->id}}" required autofocus />
+
 
             <div class="flex items-center justify-end mt-4">
+                @if($errors->any())
+                    {{ implode('', $errors->all(':message')) }}
+                @endif
                 <x-primary-button class="ml-4">
                     {{ __('Klaar') }}
                 </x-primary-button>
