@@ -3,7 +3,11 @@
 namespace App\Http\Requests;
 
 use App\Models\Reservation;
+use App\Models\Space;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreReservationRequest extends FormRequest
 {
@@ -33,27 +37,55 @@ class StoreReservationRequest extends FormRequest
         ];
     }
 
-    public function time_validation()
+    public function withValidator($validator)
     {
-        $time_check = Reservation::where('user_id',  $user->id)
-            ->where('begin_time' , '>=', $begin_time->format('H:i'))
-            ->where('end_time', '<=', $end_time->format('H:i'))->get();
+        $validator->after(function ($validator) {
+            if ($this->time_diffrence()) {
+                $validator->errors()->add('DOB', 'You must be 18 years or older to use this site.');
+            }
+            if ($this->exisisting_reservation()) {
+                $validator->errors()->add('DOB', 'You must be 18 years or older to use this site.');
+            }
+            if ($this->max_reservation()) {
+                $validator->errors()->add('DOB', 'You must be 18 years or older to use this site.');
+            }
+            if ($this->max_space_reached()) {
+                $validator->errors()->add('DOB', 'You must be 18 years or older to use this site.');
+            }
+        });
+    }
 
-        // Controles uitvoeren of de gebruiker juiste data heeft ingevoerd
-        if (!$end_time->isAfter($begin_time) || $begin_time->floatDiffInMinutes($end_time) > 60)
-        {
-            return redirect()->back()->withErrors(['msg' => 'Je moet minimaal 15 minuten reserveren of je hebt meer dan een uur gereserveerd']);
-        }
-        if (!$time_check->isEmpty())
-        {
-            return redirect()->back()->withErrors(['msg' => 'Je hebt al een reservering tussen die tijd']);
-        }
-        if($user->reservations === 5) {
-            return redirect()->back()->withErrors(['msg' => 'Je hebt al 5 reserveringen']);
-        }
-        if($space->max_students - $space->reserved_students <= 0)
-        {
-            return redirect()->back()->withErrors(['msg' => 'Ruimte is vol']);
-        }
+    private function time_diffrence()
+    {
+        $begin_time = Carbon::create(0, 0, 0, $this->input('begin_time_hour'), $this->input('begin_time_minute'));
+        $end_time = Carbon::create(0, 0, 0, $this->input('end_time_hour'), $this->input('end_time_minute'));
+        return (!$end_time->isAfter($begin_time) || $begin_time->floatDiffInMinutes($end_time) > 60);
+    }
+
+    private function exisisting_reservation()
+    {
+        $user = User::find(Auth::user()->id);
+
+        $begin_time = Carbon::create(0, 0, 0, $this->input('begin_time_hour'), $this->input('begin_time_minute'));
+        $end_time = Carbon::create(0, 0, 0, $this->input('end_time_hour'), $this->input('end_time_minute'));
+
+        $time_check = Reservation::where('user_id', $user->id)
+            ->where('begin_time', '>=', $begin_time->format('H:i'))
+            ->where('end_time', '<=', $end_time->format('H:i'))->get();
+        return (!$time_check->isEmpty());
+    }
+
+    private function max_reservation()
+    {
+        $user = User::find(Auth::user()->id);
+        return ($user->reservations === 5);
+    }
+
+    private function max_space_reached()
+    {
+        $space = Space::where('name', $this->input('space_name'))->first();
+        return ($space->max_students - $space->reserved_students <= 0);
+
     }
 }
+

@@ -46,14 +46,23 @@ class ReservationController extends Controller
     public function store(StoreReservationRequest $request)
     {
 
-
         $user = User::find(Auth::user()->id);
         $space = Space::where('name', $request['space_name'])->first();
+        $reservation = new Reservation();
+        $reservation->user_id= $user->id;
+        $reservation->space_id = $space->id;
+        $reservation->begin_time = $begin_time->format('H:i');
+        $reservation->end_time = $end_time->format('H:i');
 
-        $begin_time = Carbon::create(0,0,0,$request['begin_time_hour'],$request['begin_time_minute']);
-        $end_time = Carbon::create(0,0,0,$request['end_time_hour'],$request['end_time_minute']);
+        $user->reservations++;
+        $space->reserved_students++;
 
-        return $this->data_check($user,$space,$begin_time,$end_time);
+        $space->save();
+        $user->save();
+        $reservation->save();
+        $this->route = redirect()->route('dashboard');
+
+        return $this->route;
     }
 
     /**
@@ -90,12 +99,14 @@ class ReservationController extends Controller
      */
     public function update(Request $request, Reservation $reservation)
     {
+
         $reservation = Reservation::find($reservation->id);
         $reservation->space_id = Space::where('name', $request['space_name'])->first()->id;
         $reservation->user_id= Auth::user()->id;
         $reservation->begin_time = Carbon::create(0,0,0,$request['begin_time_hour'],$request['begin_time_minute']);
         $reservation->end_time =  Carbon::create(0,0,0,$request['end_time_hour'],$request['end_time_minute']);
-        $this->data_check(User::find(Auth::user()->id), Space::where('name', $request['space_name'])->first(),$reservation->begin_time,$reservation->end_time,$reservation->update());
+
+        $reservation->update();
     }
 
     /**
@@ -116,24 +127,4 @@ class ReservationController extends Controller
         return redirect()->route('dashboard');
     }
 
-    private function data_check($user,$space, $begin_time, $end_time, $type )
-    {
-
-
-        $user->reservations++;
-        $space->reserved_students++;
-        $space->save();
-        $user->save();
-
-        $reservation = new Reservation();
-        $reservation->user_id= Auth::user()->id;
-        $reservation->space_id = $space->id;
-        $reservation->begin_time = $begin_time->format('H:i');
-        $reservation->end_time = $end_time->format('H:i');
-        $reservation->save();
-        $type;
-        $this->route = redirect()->route('dashboard');
-        return $this->route;
-
-    }
 }
