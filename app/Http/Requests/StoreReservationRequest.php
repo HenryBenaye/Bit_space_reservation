@@ -18,7 +18,7 @@ class StoreReservationRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -41,16 +41,19 @@ class StoreReservationRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             if ($this->time_diffrence()) {
-                $validator->errors()->add('DOB', 'You must be 18 years or older to use this site.');
+                $validator->errors()->add('begin_time_hour','Je moet minimaal 15 minuten reserveren mag maximaal 60 minuten reserveren');
             }
             if ($this->exisisting_reservation()) {
-                $validator->errors()->add('DOB', 'You must be 18 years or older to use this site.');
+                $validator->errors()->add('begin_time_hour','Je hebt al een reservering tussen die tijd.');
             }
             if ($this->max_reservation()) {
-                $validator->errors()->add('DOB', 'You must be 18 years or older to use this site.');
+                $validator->errors()->add('space_name','Je hebt al 5 reserveringen');
             }
             if ($this->max_space_reached()) {
-                $validator->errors()->add('DOB', 'You must be 18 years or older to use this site.');
+                $validator->errors()->add('space_name','Ruimte is vol');
+            }
+            if ($this->after_time()) {
+                $validator->errors()->add('end_time_hour','Je mag niet na 17:00 reserveren');
             }
         });
     }
@@ -86,6 +89,11 @@ class StoreReservationRequest extends FormRequest
         $space = Space::where('name', $this->input('space_name'))->first();
         return ($space->max_students - $space->reserved_students <= 0);
 
+    }
+    private function after_time()
+    {
+        $end_time = Carbon::create(0, 0, 0, $this->input('end_time_hour'), $this->input('end_time_minute'));
+        return ($end_time->isAfter(Carbon::create(0, 0, 0, 17, 0)));
     }
 }
 

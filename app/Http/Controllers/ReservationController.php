@@ -48,6 +48,9 @@ class ReservationController extends Controller
 
         $user = User::find(Auth::user()->id);
         $space = Space::where('name', $request['space_name'])->first();
+        $begin_time = Carbon::create(0, 0, 0, $request['begin_time_hour'], $request['begin_time_minute']);
+        $end_time = Carbon::create(0, 0, 0, $request['end_time_hour'], $request['end_time_minute']);
+
         $reservation = new Reservation();
         $reservation->user_id= $user->id;
         $reservation->space_id = $space->id;
@@ -60,9 +63,7 @@ class ReservationController extends Controller
         $space->save();
         $user->save();
         $reservation->save();
-        $this->route = redirect()->route('dashboard');
-
-        return $this->route;
+        return redirect()->route('dashboard');
     }
 
     /**
