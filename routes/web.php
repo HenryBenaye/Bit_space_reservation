@@ -18,8 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::resource('reservations',ReservationController::class);
-Route::resource('space', SpaceController::class);
-Route::get('/dashboard', [ReservationController::class, 'show'] )->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::resource('reservations',ReservationController::class);
+    Route::resource('space', SpaceController::class);
+});
 
 require __DIR__.'/auth.php';

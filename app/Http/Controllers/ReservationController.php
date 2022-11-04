@@ -24,8 +24,7 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        $reservations = Reservation::all();
-        return view('reservation.index',['reservations' => $reservations]);
+       return redirect()->route('reservations.show',Auth::user()->id);
     }
 
     /**
@@ -72,7 +71,7 @@ class ReservationController extends Controller
         $space->save();
         $user->save();
         $reservation->save();
-        return redirect()->route('dashboard');
+        return redirect()->route('reservations.show');
     }
 
     /**
@@ -84,7 +83,7 @@ class ReservationController extends Controller
     public function show(Reservation $reservation)
     {
         $reservations = Reservation::where('user_id', '=', Auth::user()->id)->get();
-        return view('dashboard', ['reservations' => $reservations]);
+        return view('reservation.index', ['reservations' => $reservations]);
     }
 
     /**

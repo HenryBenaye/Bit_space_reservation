@@ -1,5 +1,5 @@
 
-<x-guest-layout>
+<x-app-layout>
     <x-auth-card>
         <x-slot name="logo">
             <p>Maak een nieuwe reservering</p>
@@ -49,9 +49,9 @@
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                @if($errors->any())
-                    {{ implode('', $errors->all(':message')) }}
-                @endif
+                <x-error-message>
+
+                </x-error-message>
                 <x-primary-button class="ml-4">
                     {{ __('Klaar') }}
                 </x-primary-button>
@@ -60,4 +60,4 @@
 
         </form>
     </x-auth-card>
-</x-guest-layout>
+</x-app-layout>
