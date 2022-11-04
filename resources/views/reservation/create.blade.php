@@ -17,7 +17,7 @@
                 </select>
             </div>
 
-            <!-- Time -->
+            <!-- TimeRule -->
             <div class="begin_time_box mt-4">
                 <x-input-label for="begin_time" :value="__('Begin tijd')"  />
 

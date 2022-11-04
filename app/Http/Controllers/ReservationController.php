@@ -7,6 +7,7 @@ use App\Http\Requests\StoreReservationRequest;
 use App\Models\Reservation;
 use App\Models\Space;
 use App\Models\User;
+use App\Rules\TimeRule;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -44,8 +45,15 @@ class ReservationController extends Controller
      * @param StoreReservationRequest $request
      * @return RedirectResponse
      */
-    public function store(StoreReservationRequest $request)
+    public function store(Request $request)
     {
+        $request->validate([
+            'space_name' => ['required', 'exists:spaces,name'],
+            'begin_time_hour' => ['required', 'integer'],
+            'begin_time_minute' => ['required', 'integer'],
+            'end_time_hour' => ['required', 'integer'],
+            'end_time_minute' => ['required', 'integer', new TimeRule()],
+        ]);
         $user = User::find(Auth::user()->id);
         $space = Space::where('name', $request['space_name'])->first();
         $begin_time = Carbon::create(0, 0, 0, $request['begin_time_hour'], $request['begin_time_minute']);
