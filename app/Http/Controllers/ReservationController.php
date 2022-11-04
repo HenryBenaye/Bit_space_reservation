@@ -7,6 +7,7 @@ use App\Http\Requests\StoreReservationRequest;
 use App\Models\Reservation;
 use App\Models\Space;
 use App\Models\User;
+use App\Rules\EditTimeRule;
 use App\Rules\TimeRule;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -106,8 +107,16 @@ class ReservationController extends Controller
      * @param  \App\Models\Reservation  $reservation
      * @return \Illuminate\Http\Response
      */
-    public function update(EditReservationRequest $request, Reservation $reservation)
+    public function update(Request $request, Reservation $reservation)
     {
+        $request->validate([
+            'space_name' => ['required', 'exists:spaces,name'],
+            'begin_time_hour' => ['required', 'integer'],
+            'begin_time_minute' => ['required', 'integer'],
+            'end_time_hour' => ['required', 'integer'],
+            'end_time_minute' => ['required', 'integer', new EditTimeRule()],
+        ]);
+
         $reservation = Reservation::find($reservation->id);
         $reservation->space_id = Space::where('name', $request['space_name'])->first()->id;
         $reservation->user_id= Auth::user()->id;

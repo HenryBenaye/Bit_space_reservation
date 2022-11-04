@@ -11,7 +11,7 @@ use Illuminate\Contracts\Validation\InvokableRule;
 use Illuminate\Contracts\Validation\ValidatorAwareRule;
 use Illuminate\Support\Facades\Auth;
 
-class TimeRule implements ValidatorAwareRule, InvokableRule
+class EditTimeRule implements ValidatorAwareRule, InvokableRule
 {
     /**
      * Run the validation rule.
