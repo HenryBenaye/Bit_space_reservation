@@ -42,7 +42,7 @@ class ReservationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreReservationRequest $request
+     *
      * @return RedirectResponse
      */
     public function store(Request $request)
@@ -54,6 +54,7 @@ class ReservationController extends Controller
             'end_time_hour' => ['required', 'integer'],
             'end_time_minute' => ['required', 'integer', new TimeRule()],
         ]);
+
         $user = User::find(Auth::user()->id);
         $space = Space::where('name', $request['space_name'])->first();
         $begin_time = Carbon::create(0, 0, 0, $request['begin_time_hour'], $request['begin_time_minute']);
