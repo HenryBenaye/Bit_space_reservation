@@ -42,14 +42,7 @@ class EditTimeRule implements ValidatorAwareRule, InvokableRule
     }
     private function exisisting_reservation()
     {
-        $user = User::find(Auth::user()->id);
-
-        $begin_time = Carbon::create(0, 0, 0, request()->begin_time_hour, request()->begin_time_minute);
-        $end_time = Carbon::create(0, 0, 0, request()->end_time_hour, request()->end_time_minute);
-
-        $time_check = Reservation::where('user_id', $user->id)
-            ->where('begin_time', '>=', $begin_time->format('H:i'))
-            ->where('end_time', '<=', $end_time->format('H:i'))->get();
+        $time_check = Reservation::SpaceTime()->get();
         return (!$time_check->isEmpty());
     }
     private function after_time()
