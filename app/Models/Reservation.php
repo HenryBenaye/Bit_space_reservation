@@ -30,7 +30,7 @@ class   Reservation extends Model
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return void
      */
-    public function scopeSpaceTime($query)
+    public function scopeTime($query)
     {
         $query
             ->where('user_id', Auth::user()->id)
@@ -42,7 +42,21 @@ class   Reservation extends Model
             ->where('end_time', '<=',
                 Carbon::create(0, 0, 0,
                 request()->end_time_hour,
-                request()->end_time_minute
-                    ->format('H:i')));
+                request()->end_time_minute)
+                    ->format('H:i'));
+    }
+    public function scopeSpaceCheck($query)
+    {
+        $space = Space::where('name',
+            request()->space_name)
+            ->first();
+        $query
+            ->where('end_time', '>=',
+                Carbon::create(0, 0, 0,
+                    request()->end_time_hour,
+                    request()->end_time_minute)
+                ->format('H:i'))
+            ->where('space_id', '=',$space->id);
+
     }
 }

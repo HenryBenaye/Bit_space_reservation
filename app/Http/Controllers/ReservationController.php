@@ -131,7 +131,7 @@ class ReservationController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Reservation  $reservation
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
     public function destroy(Reservation $reservation)
     {
@@ -142,7 +142,7 @@ class ReservationController extends Controller
         $space->save();
         $user->save();
         Reservation::destroy($reservation->id);
-        return redirect()->route('dashboard');
+        return redirect()->route('reservations.show',Auth::user()->id);
     }
 
 }

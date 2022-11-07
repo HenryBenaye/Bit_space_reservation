@@ -44,13 +44,21 @@ class TimeRule implements ValidatorAwareRule, InvokableRule
 
     private function time_diffrence()
     {
-        $begin_time = Carbon::create(0, 0, 0, request()->begin_time_hour, request()->begin_time_minute);
-        $end_time = Carbon::create(0, 0, 0, request()->end_time_hour, request()->end_time_minute);
+        $begin_time = Carbon::create(0, 0, 0,
+            request()
+                ->begin_time_hour,
+            request()
+                ->begin_time_minute);
+        $end_time = Carbon::create(0, 0, 0,
+            request()
+                ->end_time_hour,
+            request()
+                ->end_time_minute);
         return (!$end_time->isAfter($begin_time) || $begin_time->floatDiffInMinutes($end_time) > 60);
     }
     private function exisisting_reservation()
     {
-        $time_check = Reservation::SpaceTime()->get();
+        $time_check = Reservation::Time()->get();
         return (!$time_check->isEmpty());
     }
 
@@ -62,14 +70,23 @@ class TimeRule implements ValidatorAwareRule, InvokableRule
 
     private function max_space_reached()
     {
-        $space = Space::where('name', request()->space_name)->first();
-        return ($space->max_students - $space->reserved_students <= 0);
+        $space = Space::where('name',
+            request()
+                ->space_name)
+            ->first();
+        $reserved_students = Reservation::SpaceCheck()->count();
+        return ($space->max_students == $reserved_students);
 
     }
     private function after_time()
     {
-        $end_time = Carbon::create(0, 0, 0, request()->end_time_hour, request()->end_time_minute);
-        return ($end_time->isAfter(Carbon::create(0, 0, 0, 17, 0)));
+        $end_time = Carbon::create(0, 0, 0,
+            request()
+            ->end_time_hour,
+            request()
+            ->end_time_minute);
+        return ($end_time
+            ->isAfter(Carbon::create(0, 0, 0, 17, 0)));
     }
 
     public function setValidator($validator)
