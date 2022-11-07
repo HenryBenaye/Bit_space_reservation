@@ -42,7 +42,7 @@ class EditTimeRule implements ValidatorAwareRule, InvokableRule
     }
     private function exisisting_reservation()
     {
-        $time_check = Reservation::SpaceTime()->get();
+        $time_check = Reservation::TimeEdit()->get();
         return (!$time_check->isEmpty());
     }
     private function after_time()

@@ -67,12 +67,11 @@ class ReservationController extends Controller
         $reservation->end_time = $end_time->format('H:i');
 
         $user->reservations++;
-        $space->reserved_students++;
 
         $space->save();
         $user->save();
         $reservation->save();
-        return redirect()->route('reservations.show');
+        return redirect()->route('reservations.show',Auth::user()->id);
     }
 
     /**
@@ -109,6 +108,8 @@ class ReservationController extends Controller
      */
     public function update(Request $request, Reservation $reservation)
     {
+        Reservation::destroy($reservation->id);
+
         $request->validate([
             'space_name' => ['required', 'exists:spaces,name'],
             'begin_time_hour' => ['required', 'integer'],
@@ -117,13 +118,13 @@ class ReservationController extends Controller
             'end_time_minute' => ['required', 'integer', new EditTimeRule()],
         ]);
 
-        $reservation = Reservation::find($reservation->id);
+        $reservation = new Reservation();
         $reservation->space_id = Space::where('name', $request['space_name'])->first()->id;
         $reservation->user_id= Auth::user()->id;
         $reservation->begin_time = Carbon::create(0,0,0,$request['begin_time_hour'],$request['begin_time_minute'])->format('H:i');
         $reservation->end_time =  Carbon::create(0,0,0,$request['end_time_hour'],$request['end_time_minute'])->format('H:i');
-        $reservation->update();
-        return redirect()->route('dashboard');
+        $reservation->save();
+        return redirect()->route('reservations.show',Auth::user()->id);
 
     }
 
@@ -138,7 +139,6 @@ class ReservationController extends Controller
         $user = User::find(Auth::user()->id);
         $space = Space::find($reservation->space_id);
         $user->reservations--;
-        $space->reserved_students--;
         $space->save();
         $user->save();
         Reservation::destroy($reservation->id);

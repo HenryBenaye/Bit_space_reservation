@@ -45,6 +45,26 @@ class   Reservation extends Model
                 request()->end_time_minute)
                     ->format('H:i'));
     }
+    public function scopeTimeEdit($query)
+    {
+        $space = Space::where('name',
+            request()->space_name)
+            ->first();
+
+        $query
+            ->where('user_id', Auth::user()->id)
+            ->where('space_id', $space->id)
+            ->where('begin_time', '>=',
+                Carbon::create(0, 0, 0,
+                    request()->begin_time_hour,
+                    request()->begin_time_minute)
+                ->format('H:i'))
+            ->where('end_time', '=',
+                Carbon::create(0, 0, 0,
+                request()->end_time_hour,
+                request()->end_time_minute)
+                    ->format('H:i'));
+    }
     public function scopeSpaceCheck($query)
     {
         $space = Space::where('name',
