@@ -108,6 +108,7 @@ class ReservationController extends Controller
      */
     public function update(Request $request, Reservation $reservation)
     {
+
         Reservation::destroy($reservation->id);
 
         $request->validate([
@@ -115,7 +116,7 @@ class ReservationController extends Controller
             'begin_time_hour' => ['required', 'integer'],
             'begin_time_minute' => ['required', 'integer'],
             'end_time_hour' => ['required', 'integer'],
-            'end_time_minute' => ['required', 'integer', new EditTimeRule()],
+            'end_time_minute' => ['required', 'integer', new TimeRule()],
         ]);
 
         $reservation = new Reservation();
@@ -124,6 +125,7 @@ class ReservationController extends Controller
         $reservation->begin_time = Carbon::create(0,0,0,$request['begin_time_hour'],$request['begin_time_minute'])->format('H:i');
         $reservation->end_time =  Carbon::create(0,0,0,$request['end_time_hour'],$request['end_time_minute'])->format('H:i');
         $reservation->save();
+
         return redirect()->route('reservations.show',Auth::user()->id);
 
     }
