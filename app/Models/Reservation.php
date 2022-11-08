@@ -43,7 +43,7 @@ class   Reservation extends Model
         $query
             ->where('user_id', Auth::user()->id)
             ->whereRaw("'$begin_time' BETWEEN begin_time AND end_time")
-            ->orWhereRaw("'$end_time' BETWEEN begin_time AND end_time");
+            ->orWhereRaw("user_id = ".Auth::user()->id." AND '$end_time' BETWEEN begin_time AND end_time");
     }
     public function scopeTimeEdit($query)
     {
