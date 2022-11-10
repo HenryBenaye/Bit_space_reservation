@@ -41,7 +41,7 @@ class   Reservation extends Model
             request()->end_time_minute)
             ->format('H:i');
         $query
-            ->where('user_id', Auth::user()->id)
+            ->where('user_id', )
             ->whereRaw("'$begin_time' BETWEEN begin_time AND end_time")
             ->orWhereRaw("user_id = ".Auth::user()->id." AND '$end_time' BETWEEN begin_time AND end_time");
     }

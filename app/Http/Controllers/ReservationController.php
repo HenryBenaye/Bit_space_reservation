@@ -77,10 +77,9 @@ class ReservationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Reservation  $reservation
      * @return \Illuminate\Http\Response
      */
-    public function show(Reservation $reservation)
+    public function show(User $user)
     {
         $reservations = Reservation::where('user_id', '=', Auth::user()->id)->get();
         return view('reservation.index', ['reservations' => $reservations]);
@@ -104,12 +103,11 @@ class ReservationController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Reservation  $reservation
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
     public function update(Request $request, Reservation $reservation)
     {
 
-        Reservation::destroy($reservation->id);
 
         $request->validate([
             'space_name' => ['required', 'exists:spaces,name'],
@@ -118,6 +116,9 @@ class ReservationController extends Controller
             'end_time_hour' => ['required', 'integer'],
             'end_time_minute' => ['required', 'integer', new TimeRule()],
         ]);
+
+        Reservation::destroy($reservation->id);
+
 
         $reservation = new Reservation();
         $reservation->space_id = Space::where('name', $request['space_name'])->first()->id;
