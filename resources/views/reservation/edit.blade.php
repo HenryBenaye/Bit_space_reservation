@@ -22,7 +22,7 @@
                 <x-input-label for="begin_time" :value="__('Begin tijd')"  />
 
                 <select class="rounded-md mt-1 shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" name="begin_time_hour" id="begin_time_hour">
-                    @for($x = 8; $x <= 17; $x++)
+                    @for($x = 8; $x <= 16; $x++)
                         <option  value="{{$x}}" {{ $x != date('H',strtotime($reservation->begin_time)) ?: "selected"}}>{{$x}}</option>
                     @endfor
                 </select>
@@ -61,3 +61,11 @@
         </form>
     </x-auth-card>
 </x-app-layout>
+<script>
+    jQuery("#end_time_hour").change(function() {
+        if($("#end_time_hour").val() === "17")
+        {
+            $("#end_time_minute").prop('disabled', true);
+        }
+    });
+</script>
