@@ -62,10 +62,16 @@
     </x-auth-card>
 </x-app-layout>
 <script>
+    var end_time_minute = $("#end_time_minute");
     jQuery("#end_time_hour").change(function() {
         if($("#end_time_hour").val() === "17")
         {
-            $("#end_time_minute").prop('disabled', true);
+            end_time_minute.val('0').change();
+            end_time_minute.prop('disabled', true);
+        } else
+        {
+            end_time_minute.prop('disabled', false);
+
         }
     });
 </script>

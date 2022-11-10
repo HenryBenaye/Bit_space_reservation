@@ -36,9 +36,6 @@ class TimeRule implements ValidatorAwareRule, InvokableRule
         if ($this->max_space_reached()) {
             $fail('space_name', 'Ruimte is vol');
         }
-        if ($this->after_time()) {
-            $fail('end_time_hour', 'Je mag niet na 17:00 reserveren');
-        }
 
     }
 
@@ -77,16 +74,6 @@ class TimeRule implements ValidatorAwareRule, InvokableRule
         $reserved_students = Reservation::SpaceCheck()->count();
         return ($space->max_students == $reserved_students);
 
-    }
-    private function after_time()
-    {
-        $end_time = Carbon::create(0, 0, 0,
-            request()
-            ->end_time_hour,
-            request()
-            ->end_time_minute);
-        return ($end_time
-            ->isAfter(Carbon::create(0, 0, 0, 17, 0)));
     }
 
     public function setValidator($validator)
