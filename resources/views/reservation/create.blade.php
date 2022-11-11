@@ -5,7 +5,7 @@
             <p>Maak een nieuwe reservering</p>
         </x-slot>
 
-        <form method="POST" action="{{ route('reservations.store') }}">
+        <form method="POST" action="{{ route('reservations.store') }}" id="form">
             @csrf
             <!-- Space -->
             <div>
@@ -56,8 +56,24 @@
                     {{ __('Klaar') }}
                 </x-primary-button>
             </div>
-
-
         </form>
     </x-auth-card>
 </x-app-layout>
+<script>
+    var end_time_minute = $("#end_time_minute");
+    jQuery("#end_time_hour").change(function() {
+        if($("#end_time_hour").val() === "17")
+        {
+            end_time_minute.val('0').change();
+            console.log($(end_time_minute).children("option:selected").val());
+            end_time_minute.prop('hidden', true);
+            $(".end_time_box").append("<span id='test'>00</span>")
+
+        } else
+        {
+            $("#test").hide();
+            end_time_minute.prop('hidden', false);
+        }
+    });
+
+</script>

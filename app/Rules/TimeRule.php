@@ -72,6 +72,7 @@ class TimeRule implements ValidatorAwareRule, InvokableRule
                 ->space_name)
             ->first();
         $reserved_students = Reservation::SpaceCheck()->count();
+
         return ($space->max_students == $reserved_students);
 
     }

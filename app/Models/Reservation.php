@@ -71,13 +71,18 @@ class   Reservation extends Model
             request()->space_name)
             ->first();
 
+        $begin_time = Carbon::create(0, 0, 0,
+            request()->begin_time_hour,
+            request()->begin_time_minute)
+            ->format('H:i');
+        $end_time = Carbon::create(0, 0, 0,
+            request()->end_time_hour,
+            request()->end_time_minute)
+            ->format('H:i');
         $query
-            ->where('end_time', '>=',
-                Carbon::create(0, 0, 0,
-                    request()->end_time_hour,
-                    request()->end_time_minute)
-                ->format('H:i'))
-            ->where('space_id', '=',$space->id);
+            ->where('space_id','=', $space->id )
+            ->whereRaw("'$begin_time' BETWEEN begin_time AND end_time")
+            ->orWhereRaw("space_id = ".$space->id." AND '$end_time' BETWEEN begin_time AND end_time");
 
     }
 }
