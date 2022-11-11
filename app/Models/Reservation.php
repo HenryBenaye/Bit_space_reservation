@@ -41,7 +41,7 @@ class   Reservation extends Model
             request()->end_time_minute)
             ->format('H:i');
         $query
-            ->where('user_id', )
+            ->where('user_id','=', Auth::user()->id )
             ->whereRaw("'$begin_time' BETWEEN begin_time AND end_time")
             ->orWhereRaw("user_id = ".Auth::user()->id." AND '$end_time' BETWEEN begin_time AND end_time");
     }
@@ -70,6 +70,7 @@ class   Reservation extends Model
         $space = Space::where('name',
             request()->space_name)
             ->first();
+
         $query
             ->where('end_time', '>=',
                 Carbon::create(0, 0, 0,
