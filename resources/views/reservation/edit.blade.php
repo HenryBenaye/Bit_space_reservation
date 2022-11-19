@@ -47,7 +47,7 @@
                     @endfor
                 </select>
             </div>
-            <x-text-input id="id" class="block mt-1 w-full" type="hidden" name="reservation_id" value="{{$reservation->id}}" required autofocus />
+            <x-text-input id="hidden_id" class="block mt-1 w-full" type="hidden" name="reservation_id" value="{{$reservation->id}}" required autofocus />
 
 
             <div class="flex items-center justify-end mt-4">
@@ -67,11 +67,14 @@
         if($("#end_time_hour").val() === "17")
         {
             end_time_minute.val('0').change();
-            end_time_minute.prop('disabled', true);
+            console.log($(end_time_minute).children("option:selected").val());
+            end_time_minute.prop('hidden', true);
+            $(".end_time_box").append("<span id='test'>00</span>")
+
         } else
         {
-            end_time_minute.prop('disabled', false);
-
+            $("#test").hide();
+            end_time_minute.prop('hidden', false);
         }
     });
 </script>

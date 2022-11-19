@@ -56,7 +56,11 @@ class TimeRule implements ValidatorAwareRule, InvokableRule
     private function exisisting_reservation()
     {
         $time_check = Reservation::Time()->get();
-        return (!$time_check->isEmpty());
+        $check2 = Reservation::SpaceCheck()->get();
+        if (!$time_check->isEmpty() || !$check2->isEmpty())
+        {
+           return (!$time_check->isEmpty() || !$check2->isEmpty());
+        }
     }
 
     private function max_reservation()

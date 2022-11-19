@@ -50,7 +50,7 @@
                                 {{ __('Nieuwe Reservering') }}
                             </x-dropdown-link>
                         @else
-                            <x-dropdown-link :href="route('reservations.create')">
+                            <x-dropdown-link :href="route('space.create')">
                                 {{ __('Nieuwe Space') }}
                             </x-dropdown-link>
                         @endif

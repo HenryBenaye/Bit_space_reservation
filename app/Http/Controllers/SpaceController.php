@@ -40,6 +40,7 @@ class SpaceController extends Controller
         $space->name = $request['space_name'];
         $space->max_students = $request['max_students'];
         $space->save();
+        return redirect()->route('space.index');
     }
 
     /**

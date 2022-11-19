@@ -67,22 +67,48 @@ class   Reservation extends Model
     }
     public function scopeSpaceCheck($query)
     {
+        for ($x = 00; $x <= 45; $x+=15)
+        {
+            if ($x == (int)request()->begin_time_minute)
+            {
+                switch ($x)
+                {
+                    case 15:
+                        request()->begin_time_minute = request()->begin_time_minute +45;
+                    case 30:
+                        request()->begin_time_minute = request()->begin_time_minute +30;
+                    case 45:
+                        request()->begin_time_minute = request()->begin_time_minute +15;
+                }
+            }
+            if ($x == (int)request()->end_time_minute)
+            {
+                switch ($x)
+                {
+                    case 15:
+                        request()->end_time_minute = request()->end_time_minute +45;
+                    case 30:
+                        request()->end_time_minute = request()->begin_time_minute +30;
+                    case 45:
+                        request()->end_time_minute = request()->end_time_minute +15;
+                }
+            }
+        }
         $space = Space::where('name',
             request()->space_name)
             ->first();
 
         $begin_time = Carbon::create(0, 0, 0,
             request()->begin_time_hour,
-            request()->begin_time_minute)
+             request()->begin_time_minute)
             ->format('H:i');
         $end_time = Carbon::create(0, 0, 0,
             request()->end_time_hour,
             request()->end_time_minute)
             ->format('H:i');
         $query
-            ->where('space_id','=', $space->id )
-            ->whereRaw("'$begin_time' BETWEEN begin_time AND end_time")
-            ->orWhereRaw("space_id = ".$space->id." AND '$end_time' BETWEEN begin_time AND end_time");
+            ->whereRaw("space_id = $space->id AND begin_time BETWEEN '$begin_time' AND '$end_time'")
+            ->orWhereRaw("space_id = $space->id AND end_time BETWEEN '$begin_time' AND '$end_time'");
 
     }
 }
