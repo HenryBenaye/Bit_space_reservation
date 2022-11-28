@@ -69,7 +69,8 @@
     var end_time_minute = $("#end_time_minute");
     $(".date-picker").flatpickr({
         dateFormat: "d-m-Y",
-        minDate: "today"
+        minDate: "today",
+        maxDate: new Date().fp_incr(14) // 14 days from now
     });
 
     jQuery("#end_time_hour").change(function() {
