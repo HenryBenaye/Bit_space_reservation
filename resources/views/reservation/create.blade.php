@@ -20,7 +20,7 @@
             <!-- Date -->
             <div class="mt-4">
                 <x-input-label for="day" :value="__('Dag')" />
-                <input type="date" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <input data-input   class="date-picker block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
             </div>
 
             <!-- TimeRule -->
@@ -67,6 +67,11 @@
 </x-app-layout>
 <script>
     var end_time_minute = $("#end_time_minute");
+    $(".date-picker").flatpickr({
+        dateFormat: "d-m-Y",
+        minDate: "today"
+    });
+
     jQuery("#end_time_hour").change(function() {
         if($("#end_time_hour").val() === "17")
         {
