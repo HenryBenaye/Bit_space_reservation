@@ -18,6 +18,7 @@
                         <p class="font-bold">Space</p>
                         <p>{{$reservation->space->name}}</p>
                         <p class="font-bold">Time</p>
+                        <p>{{$date =\Carbon\Carbon::parse($reservation->begin_time)->format('d-m-Y')}}</p>
                         <p>{{date("H:i", strtotime($reservation->begin_time))}}-{{date("H:i", strtotime($reservation->end_time))}}</p>
                         <div class="flex flex-row">
                             <a href="{{route('reservations.edit',$reservation->id)}}">

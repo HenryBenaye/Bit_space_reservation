@@ -17,7 +17,7 @@
                     <div class="p-6 bg-white border-b border-gray-200">
                         <p class="font-bold">Space</p>
                         <p>{{$reservation->space->name}}</p>
-                        <p class="font-bold">Time</p>
+                        <p class="font-bold">Times</p>
                         <p>{{date("H:i", strtotime($reservation->begin_time))}}-{{date("H:i", strtotime($reservation->end_time))}}</p>
                         <div class="flex flex-row">
                             <a href="{{route('reservations.edit',$reservation->id)}}">
