@@ -17,6 +17,12 @@
                 </select>
             </div>
 
+            <!-- Date -->
+            <div class="mt-4">
+                <x-input-label for="day" :value="__('Dag')" />
+                <input type="date" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            </div>
+
             <!-- TimeRule -->
             <div class="begin_time_box mt-4">
                 <x-input-label for="begin_time" :value="__('Begin tijd')"  />
