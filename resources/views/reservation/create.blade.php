@@ -20,7 +20,7 @@
             <!-- Date -->
             <div class="mt-4">
                 <x-input-label for="day" :value="__('Dag')" />
-                <input data-input   class="date-picker block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <input data-input type="date" name="date" class="date-picker block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
             </div>
 
             <!-- TimeRule -->
@@ -70,7 +70,9 @@
     $(".date-picker").flatpickr({
         dateFormat: "d-m-Y",
         minDate: "today",
-        maxDate: new Date().fp_incr(14) // 14 days from now
+        maxDate: new Date().fp_incr(14),// 14 days from now
+        defaultDate: ["today"]
+
     });
 
     jQuery("#end_time_hour").change(function() {

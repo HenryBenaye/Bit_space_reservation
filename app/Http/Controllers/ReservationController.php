@@ -57,14 +57,15 @@ class ReservationController extends Controller
 
         $user = User::find(Auth::user()->id);
         $space = Space::where('name', $request['space_name'])->first();
-        $begin_time = Carbon::create(0, 0, 0, $request['begin_time_hour'], $request['begin_time_minute']);
-        $end_time = Carbon::create(0, 0, 0, $request['end_time_hour'], $request['end_time_minute']);
+        $date = Carbon::parse($request['date']);
+        $begin_time = Carbon::create($date->year, $date->month, $date->day, $request['begin_time_hour'], $request['begin_time_minute']);
+        $end_time = Carbon::create($date->year, $date->month, $date->day, $request['end_time_hour'], $request['end_time_minute']);
 
         $reservation = new Reservation();
         $reservation->user_id= $user->id;
         $reservation->space_id = $space->id;
-        $reservation->begin_time = $begin_time->format('H:i');
-        $reservation->end_time = $end_time->format('H:i');
+        $reservation->begin_time = $begin_time->format('Y-m-d H:i');
+        $reservation->end_time = $end_time->format('Y-m-d H:i');
 
         $user->reservations++;
 
