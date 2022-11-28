@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\InvokableRule;
 use Illuminate\Contracts\Validation\ValidatorAwareRule;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TimeRule implements ValidatorAwareRule, InvokableRule
@@ -55,12 +56,13 @@ class TimeRule implements ValidatorAwareRule, InvokableRule
     }
     private function exisisting_reservation()
     {
-        $time_check = Reservation::Time()->get();
-        $check2 = Reservation::SpaceCheck()->get();
-        if (!$time_check->isEmpty() || !$check2->isEmpty())
-        {
-           return (!$time_check->isEmpty() || !$check2->isEmpty());
-        }
+//        $time_check = Reservation::Time()->get();
+//        dd($time_check);
+        $check2 = Reservation::SpaceCheck()->count();
+//        if (!$time_check->isEmpty() || !$check2->isEmpty())
+//        {
+//           return (!$time_check->isEmpty() || !$check2->isEmpty());
+//        }
     }
 
     private function max_reservation()

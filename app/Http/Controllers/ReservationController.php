@@ -52,7 +52,7 @@ class ReservationController extends Controller
             'begin_time_hour' => ['required', 'integer'],
             'begin_time_minute' => ['required', 'integer'],
             'end_time_hour' => ['required', 'integer'],
-            'end_time_minute' => ['required', 'integer', new TimeRule()],
+            'end_time_minute' => ['required', 'integer', new TimeRule($request->all())],
         ]);
 
         $user = User::find(Auth::user()->id);
