@@ -29,7 +29,7 @@ class TimeRule implements ValidatorAwareRule, InvokableRule
             $fail('Je moet minimaal 15 minuten reserveren mag maximaal 60 minuten reserveren');
         }
         if ($this->exisisting_reservation()) {
-            $fail( 'Je hebt al een reservering tussen die tijd.');
+            $fail( 'Er is een reservering tussen die tijd.');
         }
         if ($this->max_reservation()) {
             $fail('space_name', 'Je hebt al 5 reserveringen');
@@ -56,13 +56,14 @@ class TimeRule implements ValidatorAwareRule, InvokableRule
     }
     private function exisisting_reservation()
     {
-//        $time_check = Reservation::Time()->get();
-//        dd($time_check);
-        $check2 = Reservation::SpaceCheck()->count();
-//        if (!$time_check->isEmpty() || !$check2->isEmpty())
-//        {
-//           return (!$time_check->isEmpty() || !$check2->isEmpty());
-//        }
+        $UserCheck = Reservation::UserTimeCheck()->count();
+        $SpaceCheck = Reservation::SpaceTimeCheck()->count();
+        dd($UserCheck, $SpaceCheck);
+
+        if ($UserCheck > 0 || $SpaceCheck > 0)
+        {
+           return ($UserCheck > 0 || $SpaceCheck > 0);
+        }
     }
 
     private function max_reservation()
@@ -77,7 +78,7 @@ class TimeRule implements ValidatorAwareRule, InvokableRule
             request()
                 ->space_name)
             ->first();
-        $reserved_students = Reservation::SpaceCheck()->count();
+        $reserved_students = Reservation::SpaceTimeCheck()->count();
 
         return ($space->max_students == $reserved_students);
 
