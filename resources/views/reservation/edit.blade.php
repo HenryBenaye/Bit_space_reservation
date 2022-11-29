@@ -17,6 +17,12 @@
                 </select>
             </div>
 
+            <!-- Date -->
+            <div class="mt-4">
+                <x-input-label for="day" :value="__('Dag')" />
+                <input data-input type="date" name="date" class="date-picker block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            </div>
+
             <!-- TimeRule -->
             <div class="begin_time_box mt-4">
                 <x-input-label for="begin_time" :value="__('Begin tijd')"  />
@@ -62,6 +68,14 @@
     </x-auth-card>
 </x-app-layout>
 <script>
+    $(".date-picker").flatpickr({
+        dateFormat: "d-m-Y",
+        minDate: "{{\Carbon\Carbon::parse($reservation->begin_time)->format('d-m-Y')}}",
+        maxDate: new Date().fp_incr(14),// 14 days from now
+        defaultDate: ["{{\Carbon\Carbon::parse($reservation->begin_time)->format('d-m-Y')}}"]
+
+    });
+
     var end_time_minute = $("#end_time_minute");
     jQuery("#end_time_hour").change(function() {
         if($("#end_time_hour").val() === "17")

@@ -58,7 +58,7 @@ class TimeRule implements ValidatorAwareRule, InvokableRule
     {
         $UserCheck = Reservation::UserTimeCheck()->count();
         $SpaceCheck = Reservation::SpaceTimeCheck()->count();
-        dd($UserCheck, $SpaceCheck);
+//        dd($UserCheck, $SpaceCheck);
 
         if ($UserCheck > 0 || $SpaceCheck > 0)
         {
