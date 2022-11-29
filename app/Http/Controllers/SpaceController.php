@@ -96,6 +96,7 @@ class SpaceController extends Controller
      */
     public function destroy(Space $space, Request $request)
     {
+        Reservation::where('space_id', '=', $space->id)->delete();
         Space::destroy($space->id);
         return redirect()->route('space.index');
     }
