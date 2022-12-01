@@ -60,9 +60,15 @@ class TimeRule implements ValidatorAwareRule, InvokableRule
         $SpaceCheck = Reservation::SpaceTimeCheck()->count();
 //        dd($UserCheck, $SpaceCheck);
 
-        if ($UserCheck > 0 || $SpaceCheck > 0)
+        if ($UserCheck > 0)
         {
-           return ($UserCheck > 0 || $SpaceCheck > 0);
+            return true;
+        } elseif ($SpaceCheck > 0)
+        {
+            if ($this->max_space_reached())
+            {
+                return true;
+            }
         }
     }
 
