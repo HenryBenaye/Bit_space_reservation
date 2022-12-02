@@ -71,9 +71,16 @@
         dateFormat: "d-m-Y",
         minDate: "today",
         maxDate: new Date().fp_incr(14),// 14 days from now
-        defaultDate: ["today"]
+        defaultDate: ["today"],
+        disable: [
+            function(date) {
+// return true to disable
+                return (date.getDay() === 0 || date.getDay() === 6)}],
+        locale: {
+            "firstDayOfWeek": 1 // start week on Monday
+        }
 
-    });
+    })
 
     jQuery("#end_time_hour").change(function() {
         if($("#end_time_hour").val() === "17")
